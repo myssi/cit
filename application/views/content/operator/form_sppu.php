@@ -139,7 +139,9 @@ table
 	<tr>
 		<td width="285">&nbsp;</td>
 		<td width="160">Status Sortir</td>
-		<td>Ya <input type="radio" name="sortir_status" value="1"/> Tidak <input type="radio" name="sortir_status" value="0" checked="checked"/></td>
+		<td><select name="status_sortir" id="status_sortir" style="width:183px;">
+			<option value="0" selected="selected">-- Pilih Status Sortir --</option>
+		</select></td>
 	</tr>
 	<tr>
 		<td width="285">&nbsp;</td>
@@ -148,26 +150,6 @@ table
 	</tr>
 </tbody>
 </table>
-<div id="tipe_status">
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
-	<tr>
-		<td width="285">&nbsp;</td>
-		<td width="160">Tipe Hitung</td>
-		<td>
-		<select name="tipe_hitung" id="tipe_hitung" style="width:183px;">
-			<option value="0" selected="selected">-- Pilih Satu Tipe Hitung --</option>
-			<option value="1">Sortir</option>
-			<option value="2">Tidak Sortir</option>
-		</select>
-		</td>
-	</tr>
-	<tr>
-		<td width="285">&nbsp;</td>
-		<td width="160">&nbsp;</td>
-		<td>&nbsp;</td>
-	</tr>
-</table>
-</div>
 <div id="layak">
 <table width="100%" border="1" cellpadding="0" cellspacing="0">
 	<tr>

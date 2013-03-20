@@ -1,68 +1,9 @@
 $(document).ready(function(){
 	$("#sppu").focus();
-	$("#tipe_status").hide();
-	$("#layak").hide();
-	$("#tak_layak").hide();
-	$("#non_sortir").hide();
-	$("#status").change(function(){
-		var status= $("#status").val();
-		
-		if(status != 4 && status !=0)
-		{
-			$("#tipe_status").show();
-			$("#tipe_hitung").val('0');
-			$("#layak").hide();
-			$("#tak_layak").hide();
-			$("#non_sortir").hide();
-			
-			clearfield();
-		}
-		else
-		{
-			$("#tipe_status").hide();
-			$("#layak").hide();
-			$("#tak_layak").hide();
-			$("#non_sortir").hide();
-		}
-	});
 	
-	$("#tipe_hitung").change(function(){
-		var status= $("#status").val();
-		var tipe= $("#tipe_hitung").val();
-		clearfield();
-		
-		if(tipe == 1)
-		{
-			if(status == 1)
-			{
-				$("#layak").show();
-				$("#de_100rb").focus();
-				$("#tak_layak").hide();
-				$("#non_sortir").hide();
-			}
-			else
-			{
-				$("#layak").show();
-				$("#tak_layak").show();
-				$("#de_100rb").focus();
-				$("#non_sortir").hide();
-			}
-		}
-		else if(tipe == 2)
-		{
-			$("#layak").hide();
-			$("#tak_layak").hide();
-			$("#non_sortir").show();
-			$("#total_duit").focus();
-		}
-		else
-		{
-			$("#layak").hide();
-			$("#tak_layak").hide();
-			$("#non_sortir").hide();
-		}
-	});
-
+	$("#layak").hide();
+	$("#tak_layak").hide();	
+	
 /*=========================== ACCEPTED MONEY ==========================*/
 	
 	$("#de_100rb").keyup(function(){
