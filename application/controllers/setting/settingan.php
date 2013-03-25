@@ -10,6 +10,7 @@ class Settingan extends CI_Controller{
         $this->output->set_header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 		
 		$this->load->model('setting/SettinganModel','',TRUE);
+	
 	}
 	
 	function index()

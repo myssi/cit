@@ -135,7 +135,103 @@ class Pegawai extends CI_Controller{
 	{
 		if($this->session->userdata('loginlogic') == TRUE)
 		{
-			$this->session->set_userdata('message_error','Still Under Construction !');
+			$temptable= array(
+				'table_open'=>'<table width="100%" border="1" cellpadding="0" cellspacing="0">',
+				'row_alt_start'=>'<tr class="zebra">',
+				'row_alt_end'=>'</tr>',
+				'table_close'=>'</table>'
+			);
+			
+			$this->table->set_template($temptable);
+			$this->table->set_empty("&nbsp;");
+			
+			$hno= array('data'=>'NO','width'=>40);
+			$hnama= array('data'=>'NAMA','width'=>280);
+			$hnpp= array('data'=>'NPP','width'=>100);
+			$hcabang= array('data'=>'CABANG');
+			$hjab= array('data'=>'JABATAN','width'=>170);
+			$hact= array('data'=>'TINDAKAN','class'=>'headtable','colspan'=>2);
+			
+			$this->table->set_heading($hno,$hnama,$hnpp,$hcabang,$hjab,$hact);
+			
+			$staf= $this->PegawaiModel->staf_db($peg_id);
+			
+			//Form pegawai
+			
+			$input_nama= '<input type="text" name="pegawai" id="pegawai" size="30" maxlength="30" title="Edit Nama Pegawai" value="'.$staf->nama.'"/>
+			<input type="hidden" name="peg_id" value="'.$staf->peg_id.'"/>';
+			$input_npp= '<input type="text" name="npp" id="npp" size="10" maxlength="15" title="Input NPP Pegawai" value="'.$staf->npp.'"/>';
+			
+			$cabang_load= $this->SenkasSuperModel->senkas();
+			$list_cabang= '';
+			if(!empty($cabang_load))
+			{
+				
+				foreach($cabang_load as $cabang)
+				{
+					if($staf->cabang_id == $cabang->id)
+					{
+						$list_cabang.='<option value="'.$cabang->id.'" selected="selected">'.$cabang->cabang.'</option>';
+					}
+					{
+					$list_cabang.='<option value="'.$cabang->id.'">'.$cabang->cabang.'</option>';
+					}
+				}
+			}
+			$select_cabang= '<select name="cabang" id="cabang" style="width:100%">'.$list_cabang.'</select>';
+			
+			$listjabatan='';
+			
+			$jab[1]= 'Koordinator';
+			$jab[2]= 'Wakil Koordinator';
+			$jab[3]= 'Staf';
+			$jab[4]= 'Pengemudi';
+			for($i=1; $i<=4 ;$i++)
+			{
+				if($staf->jabatan == $i){ $listjabatan .= '<option value="'.$i.'" selected="selected">'.$jab[$i].'</optio>';}
+				else{$listjabatan .='<option value="'.$i.'">'.$jab[$i].'</option>';}
+			}
+			
+			$select_jabatan='<select name="jabatan" id="jabatan" style="width:100%">'.$listjabatan.'</select>';
+			$submit='<input type="image" src="'.base_url('images/icon_update.png').'" alt="submit" class="submit" title="Update"';
+			
+			$cinp_nama= array('data'=>$input_nama,'class'=>'isi tengah');
+			$cinp_npp= array('data'=>$input_npp,'class'=>'isi tengah');
+			$csel_cab= array('data'=>$select_cabang,'class'=>'isi tengah');
+			$csel_jab= array('data'=>$select_jabatan,'class'=>'isi tengah');
+			$csub= array('data'=>$submit,'class'=>'isi tengah','colspan'=>2);
+			
+			$this->table->add_row('',$cinp_nama,$cinp_npp,$csel_cab,$csel_jab,$csub);
+			
+			
+			
+			$data= array(
+				'table'=>$this->table->generate(),
+				'path'=>'Parameter > Pegawai > Daftar > Edit',
+				'actionpage'=>site_url('supervisor/pegawai/editprocess'),
+				'contain'=>'content/tableplusinput',
+				'navigation'=> 'navigation/supervisor_nav',
+				'menu1'=>'active',
+				'javacode'=>'<script type="text/javascript" src="'.base_url('js/supervisor/pegawai.js').'"></script>'
+			);
+			$this->load->view('template_warkat',$data);
+		}
+		else{redirect('loginonline');}
+	}
+	
+	function editprocess()
+	{
+		if($this->session->userdata('loginlogic') == TRUE)
+		{
+			$nama_peg= strtoupper($this->input->post('pegawai'));
+			$npp_peg= $this->input->post('npp');
+			$peg_id= $this->input->post('peg_id');
+			$cabang= $this->input->post('cabang');
+			$jabatan= $this->input->post('jabatan');
+			
+			$this->PegawaiModel->update_pegawai($nama_peg,$npp_peg,$peg_id,$cabang,$jabatan);
+			
+			$this->session->set_userdata('message_error','Nama '.$nama_peg.' Berhasil Diupdate !');
 			redirect('supervisor/pegawai');
 		}
 		else{redirect('loginonline');}

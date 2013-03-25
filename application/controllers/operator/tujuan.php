@@ -51,7 +51,7 @@ class Tujuan extends CI_Controller{
 					$edit= anchor('operator/tujuan/edit/'.$tujuan->tujuan_id,'Edit',array('class'=>'edit'));
 					$delete= anchor('operator/tujuan/delete/'.$tujuan->tujuan_id,'Hapus',array('class'=>'delete'));
 					$cell_no= array('data'=>++$i,'class'=>'isi tengah');
-					$cell_asal= array('data'=>strtoupper($tujuan->tujuan),'class'=>'isi tengah');
+					$cell_asal= array('data'=>strtoupper($tujuan->tujuan),'class'=>'isi kiri');
 					$cell_edit= array('data'=>$edit,'class'=>'isi tengah');
 					$cell_delete= array('data'=>$delete,'class'=>'isi tengah');
 					

@@ -17,6 +17,7 @@ class RestoreRekap extends CI_Controller{
 	{
 		if($this->session->userdata('loginlogic') == TRUE)
 		{
+			
 			$data['path']= 'Restore > Paket';
 			$data['nasabah']= $this->NonSortirModel->customer1();
 			$data['contain']='content/management/form_restore';
@@ -127,6 +128,7 @@ class RestoreRekap extends CI_Controller{
 				$this->session->set_userdata('message_error','Tidak Ada Data yang akan di restore !');
 				redirect('management/restorerekap');
 			}
+			
 			
 			$data['path']= 'Restore > Paket ';
 			$data['contain']='content/management/tablepage';

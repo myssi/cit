@@ -55,5 +55,24 @@ class AdminisModel extends CI_Model{
 		$this->db->where('user_id',$id);
 		$this->db->delete('tbuser');
 	}
+	
+	function user_db($id)
+	{
+		$query= $this->db->get_where('tbuser',array('user_id'=>$id),1,0);
+		
+		return $query->row();
+	}
+	
+	function update_user($username,$password,$userid,$grup_level,$cabang)
+	{
+		$data= array(
+		'username'=>$username,
+		'password'=>$password,
+		'grup_level'=>$grup_level,
+		'id_cabang'=>$cabang
+		);
+		
+		$this->db->where('user_id',$userid)->update('tbuser',$data);
+	}
 }
 ?>

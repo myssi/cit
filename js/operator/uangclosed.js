@@ -1,8 +1,36 @@
 $(document).ready(function(){
+	$("#tanggal").datepicker({dateFormat:"dd-mm-yy"});
+	$("#berangkat").timepicker({});
+	$("#serah_brkt").timepicker({});
+	$("#tiba").timepicker({});
+	$("#serah_tiba").timepicker({});
 	$("#sppu").focus();
-	
 	$("#layak").hide();
-	$("#tak_layak").hide();	
+	$("#tak_layak").hide();
+	$("#non_sortir").hide();
+	
+	$("#status_sortir").change(function(){
+		var status= $("#status_sortir").val();
+		
+		if(status == 1)
+		{
+			$("#layak").show();
+			$("#tak_layak").show();
+			$("#non_sortir").hide();
+		}
+		else if(status == 2)
+		{
+			$("#layak").hide();
+			$("#tak_layak").hide();
+			$("#non_sortir").show();
+		}
+		else
+		{
+			$("#layak").hide();
+			$("#tak_layak").hide();
+			$("#non_sortir").hide();
+		}
+	});
 	
 /*=========================== ACCEPTED MONEY ==========================*/
 	
@@ -519,9 +547,11 @@ $("#ng100").keyup(function(){
 		var asal= $("#asal").val();
 		var tujuan= $("#tujuan").val();
 		var staff= $("#staff").val();
-		var status= $("#status").val();
-		var tipe_hitung= $("#tipe_hitung").val();
+		var status= $("#status_sortir").val();
+		var remis= $("input[name=remis]:checked").val();
+		
 		var total_duit= $("#total_duit").val();
+		
 		
 		if(sppu == '')
 		{
@@ -541,40 +571,34 @@ $("#ng100").keyup(function(){
 			$("#asal").focus();
 			return false;
 		}
-		if(tujuan == 0)
+		if(remis == 0)
 		{
+			if(tujuan == 0)
+			{
 			alert("Lokasi Tujuan Harus Dipilih !");
 			$("#tujuan").focus();
 			return false;
-		}
-		if(staff == 0)
-		{
+			}
+			if(staff == 0)
+			{
 			alert("Staf Harus Dipilih !");
 			$("#staff").focus();
 			return false;
-		}
-		if(status == 0)
-		{
-			alert("Status Harus Dipilih !");
-			$("#status").focus();
-			return false;
-		}
-		if(status != 4 && status != 0)
-		{
-			if(tipe_hitung == 0)
+			}
+			if(status == 0)
 			{
-				alert("Tipe Hitung Uang Harus Dipilih !");
-				$("#tipe_hitung").focus();
+			alert("Status Sortir Harus Dipilih !");
+			$("#status_sortir").focus();
+			return false;
+			}
+			else if(status == 2)
+			{
+			if(total_duit == '' || total_duit == 0)
+			{
+				alert("Total Uang Harus Diisi !");
+				$("#total_duit").focus();
 				return false;
 			}
-			else if(tipe_hitung == 2)
-			{
-				if(total_duit == '')
-				{
-					alert("Total Uang Harus Dipilih !");
-					$("#total_duit").focus();
-					return false;
-				}
 			}
 		}
 		

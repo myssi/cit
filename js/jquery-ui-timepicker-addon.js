@@ -38,12 +38,12 @@ function Timepicker() {
 		timeFormat: 'hh:mm tt',
 		timeSuffix: '',
 		timeOnlyTitle: 'Pilih Jam',
-		timeText: 'Time',
-		hourText: 'Hour',
-		minuteText: 'Minute',
-		secondText: 'Second',
-		millisecText: 'Millisecond',
-		timezoneText: 'Time Zone'
+		timeText: 'Waktu',
+		hourText: 'Jam',
+		minuteText: 'Menit',
+		secondText: 'Detik',
+		millisecText: 'Mili Detik',
+		timezoneText: 'Zona Waktu'
 	};
 	this._defaults = { // Global defaults for all the datetime picker instances
 		showButtonPanel: true,

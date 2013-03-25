@@ -101,7 +101,110 @@ class Adminis extends CI_Controller{
 	{
 		if($this->session->userdata('loginlogic') == TRUE)
 		{
-			$this->session->set_userdata('message_error','This Menu Still Under Construction');
+			$userld= $this->AdminisModel->user_db($userid);
+			
+			$templatetable= array(
+				'table_open'=>'<table width="100%" border="0" cellpadding="0" cellspacing="0">',
+				'table_close'=>'</table>'
+			);
+			
+			$this->table->set_template($templatetable);
+			$this->table->set_empty("&nbsp;");
+			
+			$htitle= array('data'=>'FORM EDIT PENGGUNA','colspan'=>3);
+			
+			$this->table->set_heading($htitle);
+			$this->table->add_row('','','');
+			
+			$input_username= '<input type="text" name="username" id="username" size="30" maxlength="40" value="'.$userld->username.'"/>
+			<input type="hidden" name="userid" value="'.$userid.'"/>
+			';
+			$c_nol= array('data'=>'','width'=>285,'class'=>'isi tengah');
+			$cin_user= array('data'=>$input_username,'isi kiri');
+			$c_user= array('data'=>'USERNAME','class'=>'isi kiri','width'=>160);
+			
+			$this->table->add_row($c_nol,$c_user,$cin_user);
+			$this->table->add_row('','','');
+			
+			$input_password= '<input type="password" name="password" id="password" size="30" maxlength="40" value="'.$userld->password.'"/>';
+			$cin_pass= array('data'=>$input_password,'class'=>'isi');
+			$c_pass= array('data'=>'PASSWORD','class'=>'isi kiri');
+			
+			$this->table->add_row($c_nol,$c_pass,$cin_pass);
+			$this->table->add_row('','','');
+			
+			$input_conf= '<input type="password" name="konfirmasi" id="konfirmasi" size="30" maxlength="40" value="'.$userld->password.'"/>';
+			$cin_conf= array('data'=>$input_conf,'class'=>'isi');
+			$c_conf= array('data'=>'KONFIRMASI PASSWORD','class'=>'isi kiri');
+			
+			$this->table->add_row($c_nol,$c_conf,$cin_conf);
+			$this->table->add_row('','','');
+			
+			$list_level[2]= 'Supervisor';
+			$list_level[3]= 'Operator';
+			$list_level[4]= 'Manajemen';
+			
+			$grup_level='';
+			for($i=2; $i <= 4 ; $i++)
+			{
+				if($userld->grup_level == $i){ $grup_level .= '<option value="'.$i.'" selected="selected">'.$list_level[$i].'</option>';}
+				else{$grup_level .= '<option value="'.$i.'">'.$list_level[$i].'</option>';}
+			}
+			$select_level='<select name="level" id="level" style="width:183px;">'.$grup_level.'</select>';
+			$csel_level= array('data'=>$select_level,'class'=>'isi');
+			$c_level= array('data'=>'LEVEL','class'=>'isi kiri');
+			$this->table->add_row($c_nol,$c_level,$csel_level);
+			$this->table->add_row('','','');
+			
+			$cabang_list= $this->AdminisModel->listcabang();
+			$listcab='';
+			foreach($cabang_list as $cabang)
+			{
+				if($userld->id_cabang == $cabang->id)
+				{
+					$listcab .= '<option value="'.$cabang->id.'" selected="selected">'.$cabang->cabang.'</option>';
+				}
+				else
+				{
+					$listcab .= '<option value="'.$cabang->id.'">'.$cabang->cabang.'</option>';
+				}
+			}
+			
+			$select_cabang= '<select name="cabang" id="cabang" style="width:183px;">'.$listcab.'</select>';
+			$cell_cabang= array('data'=>$select_cabang,'class'=>'isi');
+			$ctext_cab= array('data'=>'CABANG','class'=>'isi kiri');
+			$this->table->add_row($c_nol,$ctext_cab,$cell_cabang);
+			$this->table->add_row('','','');
+			
+			$button_save= '<input type="submit" value=" Edit " style="width:120px;height:30px" class="sbsubmit"/>';
+			$this->table->add_row($c_nol,'',$button_save);
+			
+			$data= array(
+			'table'=>$this->table->generate(),
+			'path'=>'Pengguna > Daftar > Edit',
+			'contain'=>'content/tableplusinput',
+			'navigation'=>'navigation/administrator',
+			'menu1'=>'active',
+			'actionpage'=> site_url('adm/adminis/editprocess')
+			);
+			$this->load->view('template_warkat',$data);
+		}
+		else{redirect('loginonline');}
+	}
+	
+	function editprocess()
+	{
+		if($this->session->userdata('loginlogic') == TRUE)
+		{
+			$username= strtolower($this->input->post('username'));
+			$password= md5($this->input->post('password'));
+			$userid= $this->input->post('userid');
+			$grup_level= $this->input->post('level');
+			$cabang= $this->input->post('cabang');
+			
+			$this->AdminisModel->update_user($username,$password,$userid,$grup_level,$cabang);
+			
+			$this->session->set_userdata('message_error','Username '.$username.' Berhasil Diedit !');
 			redirect('adm/adminis');
 		}
 		else{redirect('loginonline');}

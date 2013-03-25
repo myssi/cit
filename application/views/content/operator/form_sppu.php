@@ -69,7 +69,37 @@ table
 	<tr>
 		<td width="285">&nbsp;</td>
 		<td width="160">Status SPPU</td>
-		<td>Closed <input type="radio" name="status_sppu" value="1"/> Opened <input type="radio" name="status_sppu" value="0" checked="checked"/></td>
+		<td>Closed <input type="radio" name="status_sppu" value="1" checked="checked"/> Opened <input type="radio" name="status_sppu" value="0" /></td>
+	</tr>
+	<tr>
+		<td width="285">&nbsp;</td>
+		<td width="160">&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td width="285">&nbsp;</td>
+		<td width="160">Status Adhoc</td>
+		<td>Ya <input type="radio" name="status_adhoc" value="1" /> Tidak <input type="radio" name="status_adhoc" value="0" checked="checked"/></td>
+	</tr>
+	<tr>
+		<td width="285">&nbsp;</td>
+		<td width="160">&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td width="285">&nbsp;</td>
+		<td width="160">Status Remis</td>
+		<td>Ya <input type="radio" name="remis" value="1" /> Tidak <input type="radio" name="remis" value="0" checked="checked"/></td>
+	</tr>
+	<tr>
+		<td width="285">&nbsp;</td>
+		<td width="160">&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td width="285">&nbsp;</td>
+		<td width="160">Tanggal</td>
+		<td><input type="text" name="tanggal" id="tanggal" size="30" /></td>
 	</tr>
 	<tr>
 		<td width="285">&nbsp;</td>
@@ -98,8 +128,28 @@ table
 	</tr>
 	<tr>
 		<td width="285">&nbsp;</td>
+		<td width="160">Berangkat / Serah Terima</td>
+		<td><input type="text" name="berangkat" id="berangkat" size="30" /> / <input type="text" name="serah_brkt" id="serah_brkt" size="30" /></td>
+	</tr>
+	<tr>
+		<td width="285">&nbsp;</td>
+		<td width="160">&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td width="285">&nbsp;</td>
 		<td width="160">Tujuan</td>
 		<td><?php echo isset($select_tujuan) ? $select_tujuan : ''; ?></td>
+	</tr>
+	<tr>
+		<td width="285">&nbsp;</td>
+		<td width="160">&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td width="285">&nbsp;</td>
+		<td width="160">Tiba / Serah Terima</td>
+		<td><input type="text" name="tiba" id="tiba" size="30" /> / <input type="text" name="serah_tiba" id="serah_tiba" size="30" /></td>
 	</tr>
 	<tr>
 		<td width="285">&nbsp;</td>
@@ -119,7 +169,7 @@ table
 	<tr>
 		<td width="285">&nbsp;</td>
 		<td width="160">Status Pengambilan</td>
-		<td>Brangkas <input type="radio" name="brangkas" value="1"/> Pelanggan <input type="radio" name="brangkas" value="0" checked="checked"/></td>
+		<td>Brangkas <input type="radio" name="ambil" value="1"/> Pelanggan <input type="radio" name="ambil" value="0" checked="checked"/></td>
 	</tr>
 	<tr>
 		<td width="285">&nbsp;</td>
@@ -129,7 +179,7 @@ table
 	<tr>
 		<td width="285">&nbsp;</td>
 		<td width="160">Status Brangkas</td>
-		<td>Simpan <input type="radio" name="brangkas_status" value="1"/> Tidak <input type="radio" name="brangkas_status" value="0" checked="checked"/></td>
+		<td>Simpan <input type="radio" name="status_brangkas" value="1"/> Tidak <input type="radio" name="status_brangkas" value="0" checked="checked"/></td>
 	</tr>
 	<tr>
 		<td width="285">&nbsp;</td>
@@ -141,6 +191,8 @@ table
 		<td width="160">Status Sortir</td>
 		<td><select name="status_sortir" id="status_sortir" style="width:183px;">
 			<option value="0" selected="selected">-- Pilih Status Sortir --</option>
+			<option value="1">Sortir</option>
+			<option value="2">Tidak Sortir</option>
 		</select></td>
 	</tr>
 	<tr>

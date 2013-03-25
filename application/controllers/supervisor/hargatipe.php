@@ -224,7 +224,7 @@ class HargaTipe extends CI_Controller{
 		$adhoc= $this->input->post('adhoc');
 		$tanggal= $this->input->post('tglharga');
 		
-		$sharga= $this->haragaTipeModel->tri_desimal($harga);
+		$sharga= $this->HargaTipeModel->tri_desimal($harga);
 		$stanggal= date('d M Y',strtotime($tanggal));
 		$namenasabah= $this->HargaTipeModel->nasabahname($id);
 		if($this->HargaTipeModel->update_price($id,$harga,$tanggal,$adhoc) == TRUE)
@@ -236,7 +236,7 @@ class HargaTipe extends CI_Controller{
 			$this->session->set_userdata('message_error','Harga '.$namenasabah->nasabah.' gagal diupdate !');
 		}
 		
-		redirect('supervisor');
+		redirect('supervisor/hargatipe');
 	}
 }
 ?>

@@ -27,7 +27,7 @@ class NonSortirModel extends CI_Model{
 		return $this->db->get()->result();
 	}
 	
-	function nonsortirview($aw,$ak,$id)
+	/*function nonsortirview($aw,$ak,$id)
 	{
 		$awal= date('Y-m-d',$aw);
 		$akhir= date('Y-m-d',$ak);
@@ -40,9 +40,29 @@ class NonSortirModel extends CI_Model{
 		$this->db->where('tbreport_uang_nonsort.tanggal <=',$akhir);
 		$this->db->where('tbreport_uang_nonsort.customer',$id);
 		return $this->db->get()->result();
+	}*/
+	
+	function nonsortirview($aw,$ak,$id)
+	{
+		$awal= date('Y-m-d',$aw);
+		$akhir= date('Y-m-d',$ak);
+		
+		$this->db->select('sppu_uang.*,hargatipe1.hargapertrip,nasabah.nasabah,direct_closed.total,asal_lokasi.asal,tujuan_lokasi.tujuan');
+		$this->db->from('sppu_uang');
+		$this->db->join('hargatipe1','sppu_uang.nasabah_id = hargatipe1.idnasabah');
+		$this->db->join('nasabah','sppu_uang.nasabah_id = nasabah.idnasabah');
+		$this->db->join('direct_closed','direct_closed.sppu = sppu_uang.sppu');
+		$this->db->join('asal_lokasi','sppu_uang.asal_id = asal_lokasi.asal_id');
+		$this->db->join('tujuan_lokasi','sppu_uang.tujuan_id = tujuan_lokasi.tujuan_id');
+		$this->db->where('sppu_uang.status_sppu',1);
+		$this->db->where('sppu_uang.status_brangkas',0);
+		$this->db->where('sppu_uang.tanggal_closed >=',$awal);
+		$this->db->where('sppu_uang.tanggal_closed <=',$akhir);
+		$this->db->where('sppu_uang.nasabah_id',$id);
+		return $this->db->get()->result();
 	}
 	
-	function totaljln($aw,$ak,$id)
+	/*function totaljln($aw,$ak,$id)
 	{
 		$awal= date('Y-m-d',$aw);
 		$akhir= date('Y-m-d',$ak);
@@ -53,9 +73,24 @@ class NonSortirModel extends CI_Model{
 		$this->db->where('tbreport_uang_nonsort.tanggal <=',$akhir);
 		$this->db->where('tbreport_uang_nonsort.customer',$id);
 		return $this->db->count_all_results();
+	}*/
+	
+	function totaljln($aw,$ak,$id)
+	{
+		$awal= date('Y-m-d',$aw);
+		$akhir= date('Y-m-d',$ak);
+		
+		$this->db->select('*');
+		$this->db->from('sppu_uang');
+		$this->db->where('sppu_uang.status_sppu',1);
+		$this->db->where('sppu_uang.status_brangkas',0);
+		$this->db->where('sppu_uang.tanggal_closed >=',$awal);
+		$this->db->where('sppu_uang.tanggal_closed <=',$akhir);
+		$this->db->where('sppu_uang.nasabah_id',$id);
+		return $this->db->count_all_results();
 	}
 	
-	function totaluang($aw,$ak,$id)
+	/*function totaluang($aw,$ak,$id)
 	{
 		$awal= date('Y-m-d',$aw);
 		$akhir= date('Y-m-d',$ak);
@@ -67,8 +102,22 @@ class NonSortirModel extends CI_Model{
 		$this->db->where('customer',$id);
 		$query= $this->db->get();
 		return $query->row_array();
-	}
+	}*/
 	
+	function totaluang($awaltgl,$akhirtgl,$nasabah_id)
+	{
+		$awal= date('Y-m-d',$awaltgl);
+		$akhir= date('Y-m-d',$akhirtgl);
+		
+		$this->db->select_sum('direct_closed.total');
+		$this->db->from('sppu_uang');
+		$this->db->join('direct_closed','sppu_uang.sppu = direct_closed.sppu');
+		$this->db->where('sppu_uang.tanggal_closed >=',$awal);
+		$this->db->where('sppu_uang.tanggal_closed <=',$akhir);
+		$this->db->where('sppu_uang.nasabah_id',$nasabah_id);
+		$query= $this->db->get();
+		return $query->row_array();
+	}
 	function cabangolah($idnasabah)
 	{
 		$this->db->select('olahnasabah.*,nasabah.nasabah,tbcabang.*');
@@ -178,5 +227,7 @@ class NonSortirModel extends CI_Model{
 		}
 		else{return FALSE;}
 	}
+	
+	
 }
 ?>

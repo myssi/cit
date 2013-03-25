@@ -16,6 +16,7 @@ class NonSortir extends CI_Controller{
 	{
 		if($this->session->userdata('loginlogic') == TRUE)
 		{
+			
 			$data['path']= 'Rekap > Paket';
 			$data['nasabah']= $this->NonSortirModel->customer1();
 			$data['contain']='content/management/form_nasabah';
@@ -73,10 +74,10 @@ class NonSortir extends CI_Controller{
 				$hno= array('data'=>'No','class'=>'headtable','width'=>40);
 				$htgl= array('data'=>'Tanggal','class'=>'headtable','width'=>75);
 				$hsppu= array('data'=>'SPPU','class'=>'headtable','width'=>70);
-				$hdari= array('data'=>'Dari','class'=>'headtable');
+				$hdari= array('data'=>'Asal','class'=>'headtable');
 				$htiba= array('data'=>'Tiba','class'=>'headtable','width'=>70);
 				$hserahtrim= array('data'=>'Serah Terima','class'=>'headtable','width'=>70);
-				$hke= array('data'=>'Ke','class'=>'headtable');
+				$hke= array('data'=>'Tujuan','class'=>'headtable');
 				$hnominal= array('data'=>'Nominal','class'=>'headtable');
 				$hregular= array('data'=>'Regular','class'=>'headtable');
 				$hadhoc= array('data'=>'ADHOC','class'=>'headtable','width'=>60);
@@ -86,10 +87,11 @@ class NonSortir extends CI_Controller{
 				//$this->table->add_row($hno,$htgl,$hsppu,$hdari,$htiba,$hserahtrim,$hke,$htiba,$hserahtrim,$hnominal,$hregular,$hadhoc,$hbatal,$hact);
 				$this->table->set_heading($hno,$htgl,$hsppu,$hdari,$htiba,$hserahtrim,$hke,$htiba,$hserahtrim,$hnominal,$hregular,$hadhoc,$hbatal,$hact);
 				
+				$total_angkut= 0;
 				foreach($nasabahview as $nasview)
 				{
 					$act= anchor('management/nonsortir/remove_tag/'.$nasview->sppu,'Hapus',array('class'=>'delete','onclick'=>"return confirm('Apakah Anda yakin menghapus SPPU ini ?');"));
-					$tanggal= date('d M',strtotime($nasview->tanggal));
+					$tanggal= date('d M',strtotime($nasview->tanggal_closed));
 					$nama= $nasview->nasabah;
 					// separate time arrive+handover(from)
 					$tdari= explode('-',$nasview->berangkat);
@@ -102,25 +104,25 @@ class NonSortir extends CI_Controller{
 					$srhke= trim($tke[1]);
 					
 					//print decimal with comma
-					$nominal= $this->NonSortirModel->tri_desimal($nasview->nominal);
+					$nominal= $this->NonSortirModel->tri_desimal($nasview->total);
 					$regular= $this->NonSortirModel->tri_desimal($nasview->hargapertrip);
 					$pertrip= $nasview->hargapertrip;
 					//adhoc flag
-					if($nasview->adhoc == 0){$adhoc='none';}
+					if($nasview->status_adhoc == 0){$adhoc='none';}
 					else{$adhoc= 'Adhoc';}
 					
-					if($nasview->status == 4){$batal='Cancel';}
+					if($nasview->remis == 1){$batal='Cancel';}
 					else{$batal='none';}
 					//====================== Load to table ============================
 					
 					$cell_no= array('data'=>++$i,'class'=>'isi tengah');
 					$cell_tgl= array('data'=>$tanggal,'class'=>'isi tengah');
 					$cell_sppu= array('data'=>$nasview->sppu,'class'=>'isi tengah');
-					$cell_dari= array('data'=>$nasview->dari,'class'=>'isi tengah');
+					$cell_dari= array('data'=>$nasview->asal,'class'=>'isi tengah');
 					$cell_tibadari= array('data'=>$tibadari,'class'=>'isi tengah');
 					$cell_srhdari= array('data'=>$srhdari,'class'=>'isi tengah');
 					
-					$cell_ke= array('data'=>$nasview->ke,'class'=>'isi tengah');
+					$cell_ke= array('data'=>$nasview->tujuan,'class'=>'isi tengah');
 					$cell_tibake= array('data'=>$tibake,'class'=>'isi tengah');
 					$cell_srhke= array('data'=>$srhke,'class'=>'isi tengah');
 					$cell_nom= array('data'=>$nominal,'class'=>'isi kanan');
@@ -132,11 +134,13 @@ class NonSortir extends CI_Controller{
 					
 					$this->table->add_row($cell_no,$cell_tgl,$cell_sppu,$cell_dari,$cell_tibadari,$cell_srhdari,$cell_ke,
 					$cell_tibake,$cell_srhke,$cell_nom,$cell_regular,$cell_adhoc,$cell_batal,$cell_act);
+					
+					$total_angkut= $total_angkut+ $nasview->total;
 				}
 				
 				//Total delivery cash
-				$totuangdelivery= $this->NonSortirModel->totaluang($awal,$akhir,$idnas);
-				$uangtot= $this->NonSortirModel->tri_desimal($totuangdelivery['nominal']);
+				
+				$uangtot= $this->NonSortirModel->tri_desimal($total_angkut);
 				//$this->table->add_row('','','','','','','','','','','','','');
 				$hangkut= array('data'=>'Total yang diangkut','class'=>'footertable kiri','colspan'=>9);
 				$cell_angkut= array('data'=>$uangtot,'class'=>'footertable tengah');
@@ -153,7 +157,7 @@ class NonSortir extends CI_Controller{
 				$htrip= array('data'=>'Total Perjalanan','class'=>'footertable kiri','colspan'=>9);
 				$cell_ttrip= array('data'=>$totaltrip,'class'=>'footertable tengah');
 				$this->table->add_row($htrip,'',$cell_ttrip,'','','');
-				
+				/**/
 				$data['table']= $this->table->generate();
 				$data['printer']= 1;
 				$data['periode']='Periode '.date('d M Y',$awal).' - '.date('d M Y',$akhir).' Nasabah '.$nama;
@@ -203,7 +207,7 @@ class NonSortir extends CI_Controller{
 			$idnasabah= $this->session->userdata('idnasabah');
 			$nama= $this->NonSortirModel->namanasabah($idnasabah)->nasabah;
 			$uangangkut= $this->NonSortirModel->totaluang($this->session->userdata('tglawal'),$this->session->userdata('tglakhir'),$idnasabah);
-			$uang_strangkut= $this->NonSortirModel->tri_desimal($uangangkut['nominal']);
+			$uang_strangkut= $this->NonSortirModel->tri_desimal($uangangkut['total']);
 			$tottrip= $this->NonSortirModel->totaljln($this->session->userdata('tglawal'),$this->session->userdata('tglakhir'),$idnasabah);
 			$nasabahview= $this->NonSortirModel->nonsortirview($this->session->userdata('tglawal'),$this->session->userdata('tglakhir'),$idnasabah);
 			
@@ -256,11 +260,11 @@ class NonSortir extends CI_Controller{
 					$this->fpdf->SetTextColor(0);
 					$flag_color=0;
 				}
-				$tanggal= date('d M',strtotime($viewnas->tanggal));
-				$nominal= $this->NonSortirModel->tri_desimal($viewnas->nominal);
+				$tanggal= date('d M',strtotime($viewnas->tanggal_closed));
+				$nominal= $this->NonSortirModel->tri_desimal($viewnas->total);
 				$regular= $this->NonSortirModel->tri_desimal($viewnas->hargapertrip);
 				
-				if($viewnas->adhoc == 0){$adhoc='none';}
+				if($viewnas->status_adhoc == 0){$adhoc='none';}
 				else{$adhoc= 'Adhoc';}
 				
 				$tdari= explode('-',$viewnas->berangkat);
@@ -277,10 +281,10 @@ class NonSortir extends CI_Controller{
 				$this->fpdf->Cell(1,$hcol,++$i,1,0,'C',1);
 				$this->fpdf->Cell(1.7,$hcol,$tanggal,1,0,'C',1);
 				$this->fpdf->Cell(1.5,$hcol,$viewnas->sppu,1,0,'C',1);
-				$this->fpdf->Cell(4,$hcol,$viewnas->dari,1,0,'C',1);
+				$this->fpdf->Cell(4,$hcol,$viewnas->asal,1,0,'C',1);
 				$this->fpdf->Cell(1.7,$hcol,$tibadari,1,0,'C',1);
 				$this->fpdf->Cell(2.1,$hcol,$srhdari,1,0,'C',1);
-				$this->fpdf->Cell(4,$hcol,$viewnas->ke,1,0,'C',1);
+				$this->fpdf->Cell(4,$hcol,$viewnas->tujuan,1,0,'C',1);
 				$this->fpdf->Cell(1.7,$hcol,$tibake,1,0,'C',1);
 				$this->fpdf->Cell(2.1,$hcol,$srhke,1,0,'C',1);
 				$this->fpdf->Cell(2.5,$hcol,$nominal,1,0,'C',1);
@@ -438,11 +442,13 @@ class NonSortir extends CI_Controller{
 	
 	function remove_tag($sppu)
 	{
-		if($this->NonSortirModel->removetag($sppu) == TRUE)
+		/*if($this->NonSortirModel->removetag($sppu) == TRUE)
 		{
 			$this->session->set_userdata('message_error','Proses pemindahan data berhasil !');
 		}
-		else{$this->session->set_userdata('message_error','Proses pemindahan data gagal !');}
+		else{$this->session->set_userdata('message_error','Proses pemindahan data gagal !');}*/
+		
+		$this->session->set_userdata('message_error','Still Under Construction !');
 		redirect('management/nonsortir');
 	}
 }

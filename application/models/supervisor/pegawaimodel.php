@@ -35,5 +35,25 @@ class PegawaiModel extends CI_Model{
 		$this->db->order_by('tbcabang.cabang','asc');
 		return $this->db->get()->result();
 	}
+	
+	function staf_db($id)
+	{
+		$query= $this->db->get_where('pegawai',array('peg_id'=>$id),1,0);
+		
+		return $query->row();
+	}
+	
+	function update_pegawai($nama_peg,$npp_peg,$peg_id,$cabang,$jabatan)
+	{
+		$data= array(
+		'nama'=>$nama_peg,
+		'npp'=>$npp_peg,
+		'jabatan'=>$jabatan,
+		'cabang_id'=>$cabang
+		);
+		
+		$this->db->where('peg_id',$peg_id);
+		$this->db->update('pegawai',$data);
+	}
 }
 ?>

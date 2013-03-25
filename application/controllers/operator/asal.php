@@ -51,7 +51,7 @@ class Asal extends CI_Controller{
 					$edit= anchor('operator/asal/edit/'.$asal->asal_id,'Edit',array('class'=>'edit'));
 					$delete= anchor('operator/asal/delete/'.$asal->asal_id,'Hapus',array('class'=>'delete'));
 					$cell_no= array('data'=>++$i,'class'=>'isi tengah');
-					$cell_asal= array('data'=>strtoupper($asal->asal),'class'=>'isi tengah');
+					$cell_asal= array('data'=>strtoupper($asal->asal),'class'=>'isi kiri');
 					$cell_edit= array('data'=>$edit,'class'=>'isi tengah');
 					$cell_delete= array('data'=>$delete,'class'=>'isi tengah');
 					
